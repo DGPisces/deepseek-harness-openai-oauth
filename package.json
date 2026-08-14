@@ -1,6 +1,6 @@
 {
   "name": "dsh-llm-codex-app-server",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "DeepSeek Harness LLM provider for Codex models using managed ChatGPT OAuth",
   "type": "module",
   "main": "lib/index.js",
@@ -17,12 +17,14 @@
     "./package.json": "./package.json"
   },
   "bin": {
+    "dsh-codex": "lib/global.js",
     "dsh-codex-login": "lib/login.js"
   },
   "files": [
     "lib",
     "cordis.patch.yml",
     "README.md",
+    "README.zh-CN.md",
     "LICENSE"
   ],
   "repository": {

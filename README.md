@@ -1,5 +1,7 @@
 # DeepSeek Harness ChatGPT OAuth provider
 
+English | [简体中文](README.zh-CN.md)
+
 Use GPT models available to your ChatGPT account as the main model in DeepSeek Harness. DeepSeek Harness keeps control of its agent loop and tools; the provider uses the official local Codex app-server for ChatGPT login and model inference.
 
 This project does not use an OpenAI API key, read another Codex installation's `auth.json`, implement OAuth, or call the unpublished ChatGPT backend directly.
@@ -7,10 +9,32 @@ This project does not use an OpenAI API key, read another Codex installation's `
 ## Requirements
 
 - Node.js 22.19 or newer
-- DeepSeek Harness developer preview compatible with commit `47f943859bef60e4160492346772ded9b24f765a`
+- DeepSeek Harness developer preview `0.1.0-rc.6`
 - A ChatGPT account with Codex access
 
-## Install
+## Global install
+
+Install the package once, then register it with every current Harness profile
+(including `web`, `headless`, and existing custom profiles):
+
+```sh
+npm install --global github:DGPisces/deepseek-harness-chatgpt
+dsh-codex install
+```
+
+Re-run `dsh-codex install` after creating a new custom profile.
+
+Start the web UI:
+
+```sh
+npx @deepseek-ai/dsh web
+```
+
+Open **Settings → OpenAI OAuth → Sign in with ChatGPT**. After authorization,
+the models available to the signed-in account appear in the normal Harness
+model picker.
+
+## Profile-only install
 
 For the Harness web UI:
 
@@ -49,6 +73,41 @@ npx @deepseek-ai/dsh --profile headless "inspect this repository"
 ```
 
 Model availability comes from the signed-in Codex account and is not hardcoded by this plugin.
+
+## Why OAuth is next to Models
+
+DeepSeek Harness `0.1.0-rc.6` exposes whole settings sections to plugins, but
+does not expose a child slot inside its built-in Models page. The OAuth section
+is therefore placed immediately after Models. Replacing or copying the Models
+page would be brittle, and the Harness contribution guide currently does not
+accept external pull requests. The plugin can move the same OAuth card into
+Models when Harness publishes a supported child slot.
+
+## Uninstall
+
+Remove the plugin from every current Harness profile while keeping the local
+OAuth login for a later reinstall:
+
+```sh
+dsh-codex uninstall
+npm uninstall --global dsh-llm-codex-app-server
+```
+
+For a clean uninstall that also logs out and removes the isolated OAuth data
+under `~/.deepseek-harness/codex`:
+
+```sh
+dsh-codex uninstall --purge-auth
+npm uninstall --global dsh-llm-codex-app-server
+```
+
+If the global command was removed first, remove the profile registrations
+manually:
+
+```sh
+npx @deepseek-ai/dsh plugin --profile web remove dsh-llm-codex-app-server
+npx @deepseek-ai/dsh plugin --profile headless remove dsh-llm-codex-app-server
+```
 
 ## Local verification
 
