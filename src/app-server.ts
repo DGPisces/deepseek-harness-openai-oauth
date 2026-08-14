@@ -86,6 +86,7 @@ export class AppServer {
       '-c', 'project_doc_max_bytes=0',
       'app-server', '--stdio',
     ], {
+      cwd: home,
       env: { ...process.env, CODEX_HOME: home },
       stdio: ['pipe', 'pipe', 'pipe'],
     })

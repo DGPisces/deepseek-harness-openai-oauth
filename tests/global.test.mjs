@@ -5,6 +5,8 @@ import { join } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import test from 'node:test'
 
+const { version } = JSON.parse(await readFile('package.json', 'utf8'))
+
 test('global installer targets standard and existing profiles', async () => {
   const root = await mkdtemp(join(tmpdir(), 'dsh-codex-global-'))
   const bin = join(root, 'bin')
@@ -27,7 +29,7 @@ test('global installer targets standard and existing profiles', async () => {
   assert(calls.some(line => line.includes(' --profile web add ')))
   assert(calls.some(line => line.includes(' --profile headless add ')))
   assert(calls.some(line => line.includes(' --profile custom add ')))
-  assert(calls.every(line => line.includes(' add deepseek-harness-openai-oauth@0.3.0')))
+  assert(calls.every(line => line.includes(` add deepseek-harness-openai-oauth@${version}`)))
 })
 
 test('global installer replaces the legacy package after adding the new package', async () => {
@@ -49,7 +51,7 @@ test('global installer replaces the legacy package after adding the new package'
   })
   assert.equal(result.status, 0, result.stderr)
   const calls = (await readFile(log, 'utf8')).trim().split('\n')
-  const add = calls.findIndex(line => line.includes(' --profile custom add deepseek-harness-openai-oauth@0.3.0'))
+  const add = calls.findIndex(line => line.includes(` --profile custom add deepseek-harness-openai-oauth@${version}`))
   const remove = calls.findIndex(line => line.includes(' --profile custom remove dsh-llm-codex-app-server'))
   assert(add >= 0)
   assert(remove > add)
