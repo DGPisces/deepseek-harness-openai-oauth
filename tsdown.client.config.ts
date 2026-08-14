@@ -1,4 +1,4 @@
-const id = 'deepseek-harness-openai-oauth'
+const id = 'dsh-openai-oauth'
 
 export default {
   entry: { client: 'src/client.tsx' },

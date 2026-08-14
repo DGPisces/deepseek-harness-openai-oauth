@@ -17,7 +17,7 @@ trust_level = "trusted"
 不过，信任整个 home 会允许 `/Users/dgpisces/.codex` 中的项目级配置、hooks 和 exec policies 加载，权限范围过大。推荐的最小权限方案是从具体仓库启动：
 
 ```bash
-cd "/Users/dgpisces/Claude Code/deepseek-harness-chatgpt"
+cd "/Users/dgpisces/Claude Code/dsh-openai-oauth"
 npx @deepseek-ai/dsh web
 ```
 
@@ -25,7 +25,7 @@ Codex 默认以 `.git` 作为项目根标记，只从该根到当前工作目录
 
 ```toml
 # /Users/dgpisces/.deepseek-harness/codex/config.toml
-[projects."/Users/dgpisces/Claude Code/deepseek-harness-chatgpt"]
+[projects."/Users/dgpisces/Claude Code/dsh-openai-oauth"]
 trust_level = "trusted"
 ```
 
@@ -34,7 +34,7 @@ trust_level = "trusted"
 ## 官方依据
 
 1. DeepSeek Harness 的官方 profile 把默认 workspace root 设为 `process.cwd()`，即启动 Harness 的当前目录。因此在提示符 `~ %` 下运行，Harness 工作区是 `/Users/dgpisces`。来源：[DeepSeek Harness `packages/bundle/base/cordis.patch.yml`](https://github.com/deepseek-ai/deepseek-harness/blob/47f943859bef60e4160492346772ded9b24f765a/packages/bundle/base/cordis.patch.yml#L166-L176)。
-2. 本 OAuth provider 默认返回 `~/.deepseek-harness/codex`，并在启动官方 Codex app-server 子进程时显式设置 `CODEX_HOME`；没有设置另一个子进程 `cwd`。来源：[本仓库 `src/paths.ts`](https://github.com/DGPisces/deepseek-harness-openai-oauth/blob/dce6b795430f725584f45ac83e3e1e56c7f6b2a1/src/paths.ts#L1-L7)、[`src/app-server.ts`](https://github.com/DGPisces/deepseek-harness-openai-oauth/blob/dce6b795430f725584f45ac83e3e1e56c7f6b2a1/src/app-server.ts#L62-L90)。所以 `~/.deepseek-harness/codex` 来自 provider 隔离设计，不是 DeepSeek Harness 核心默认值。
+2. 本 OAuth provider 默认返回 `~/.deepseek-harness/codex`，并在启动官方 Codex app-server 子进程时显式设置 `CODEX_HOME`；没有设置另一个子进程 `cwd`。来源：[本仓库 `src/paths.ts`](https://github.com/DGPisces/dsh-openai-oauth/blob/dce6b795430f725584f45ac83e3e1e56c7f6b2a1/src/paths.ts#L1-L7)、[`src/app-server.ts`](https://github.com/DGPisces/dsh-openai-oauth/blob/dce6b795430f725584f45ac83e3e1e56c7f6b2a1/src/app-server.ts#L62-L90)。所以 `~/.deepseek-harness/codex` 来自 provider 隔离设计，不是 DeepSeek Harness 核心默认值。
 3. OpenAI 官方文档说明 `CODEX_HOME` 默认为 `~/.codex`，其中的 `config.toml` 是用户配置；项目 `.codex/config.toml` 只有在项目受信任时才加载。[Advanced Configuration: Config and state locations](https://developers.openai.com/codex/config-advanced#config-and-state-locations)、[Project config files](https://developers.openai.com/codex/config-advanced#project-config-files-codexconfigtoml)。Codex 0.146.0 源码同样首先读取 `CODEX_HOME` 环境变量：[home-dir source](https://github.com/openai/codex/blob/e363b08c9175ac1cbe5893615dd2cb9ddf95043b/codex-rs/utils/home-dir/src/lib.rs#L5-L17)。
 4. OpenAI 官方文档说明项目配置扫描范围是项目根到 cwd，默认项目根标记是 `.git`：[Project root detection](https://developers.openai.com/codex/config-advanced#project-root-detection)。0.146.0 源码中的默认 marker 和根查找实现与文档一致：[markers](https://github.com/openai/codex/blob/e363b08c9175ac1cbe5893615dd2cb9ddf95043b/codex-rs/config/src/project_root_markers.rs#L5-L5)、[root lookup](https://github.com/openai/codex/blob/e363b08c9175ac1cbe5893615dd2cb9ddf95043b/codex-rs/config/src/loader/mod.rs#L1154-L1176)。没有找到 marker 时，源码返回 cwd 本身。
 5. Codex 从 cwd 到项目根检查每个 `<dir>/.codex`，只跳过与当前 `CODEX_HOME` 相同的目录：[project layer scan](https://github.com/openai/codex/blob/e363b08c9175ac1cbe5893615dd2cb9ddf95043b/codex-rs/config/src/loader/mod.rs#L1214-L1261)。这里 `/Users/dgpisces/.codex` 不等于 `/Users/dgpisces/.deepseek-harness/codex`，所以不会被跳过。

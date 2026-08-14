@@ -29,7 +29,7 @@ test('global installer targets standard and existing profiles', async () => {
   assert(calls.some(line => line.includes(' --profile web add ')))
   assert(calls.some(line => line.includes(' --profile headless add ')))
   assert(calls.some(line => line.includes(' --profile custom add ')))
-  assert(calls.every(line => line.includes(` add deepseek-harness-openai-oauth@${version}`)))
+  assert(calls.every(line => line.includes(` add dsh-openai-oauth@${version}`)))
 })
 
 test('global installer replaces the legacy package after adding the new package', async () => {
@@ -51,7 +51,7 @@ test('global installer replaces the legacy package after adding the new package'
   })
   assert.equal(result.status, 0, result.stderr)
   const calls = (await readFile(log, 'utf8')).trim().split('\n')
-  const add = calls.findIndex(line => line.includes(` --profile custom add deepseek-harness-openai-oauth@${version}`))
+  const add = calls.findIndex(line => line.includes(` --profile custom add dsh-openai-oauth@${version}`))
   const remove = calls.findIndex(line => line.includes(' --profile custom remove dsh-llm-codex-app-server'))
   assert(add >= 0)
   assert(remove > add)
@@ -68,7 +68,7 @@ test('global uninstaller only targets profiles that contain the plugin', async (
   await writeFile(join(root, 'dsh', 'profiles', 'with-plugin', 'package.json'),
     '{"dependencies":{"dsh-llm-codex-app-server":"file:plugin"}}')
   await writeFile(join(root, 'dsh', 'profiles', 'with-new-plugin', 'package.json'),
-    '{"dependencies":{"deepseek-harness-openai-oauth":"0.3.0"}}')
+    '{"dependencies":{"deepseek-harness-openai-oauth":"0.3.1"}}')
   await writeFile(join(root, 'dsh', 'profiles', 'without-plugin', 'package.json'), '{"dependencies":{}}')
   const npx = join(bin, 'npx')
   await writeFile(npx, '#!/bin/sh\nprintf "%s\\n" "$*" >> "$FAKE_NPX_LOG"\n')

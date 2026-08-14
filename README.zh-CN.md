@@ -1,4 +1,4 @@
-# deepseek-harness-openai-oauth
+# dsh-openai-oauth
 
 [English](README.md) | 简体中文
 
@@ -17,10 +17,10 @@
 只需运行一条命令：
 
 ```sh
-npx -y deepseek-harness-openai-oauth install
+npx -y dsh-openai-oauth install
 ```
 
-安装器会把插件注册到 `web`、`headless` 和当前已有的自定义 profile。如果发现旧包 `dsh-llm-codex-app-server`，也会自动迁移。
+安装器会把插件注册到 `web`、`headless` 和当前已有的自定义 profile。如果发现旧包 `deepseek-harness-openai-oauth` 或 `dsh-llm-codex-app-server`，也会自动迁移。
 
 以后更新插件时，重新运行同一条命令即可。如果安装后又新建了自定义 profile，也需要再运行一次，让安装器完成注册。
 
@@ -66,13 +66,13 @@ npx @deepseek-ai/dsh --profile headless "检查这个仓库"
 下面的命令会删除所有当前 Harness profiles 中的插件注册，但保留 ChatGPT 登录，方便以后重新安装：
 
 ```sh
-npx -y deepseek-harness-openai-oauth uninstall
+npx -y dsh-openai-oauth uninstall
 ```
 
 如果还要退出登录，并删除 `~/.deepseek-harness/codex` 中的认证数据，请运行：
 
 ```sh
-npx -y deepseek-harness-openai-oauth uninstall --purge-auth
+npx -y dsh-openai-oauth uninstall --purge-auth
 ```
 
 这两条命令也会清理旧包名留下的注册。插件通过 `npx` 运行，不会在系统中留下一个长期安装的全局 npm 包。npm 自身仍可能保留普通下载缓存。
