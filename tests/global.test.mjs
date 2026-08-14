@@ -27,6 +27,7 @@ test('global installer targets standard and existing profiles', async () => {
   assert(calls.some(line => line.includes(' --profile web add ')))
   assert(calls.some(line => line.includes(' --profile headless add ')))
   assert(calls.some(line => line.includes(' --profile custom add ')))
+  assert(calls.every(line => line.includes(' add file:')))
 })
 
 test('global uninstaller only targets profiles that contain the plugin', async () => {

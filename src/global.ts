@@ -9,6 +9,7 @@ import { codexHome } from './paths.js'
 
 const PACKAGE = 'dsh-llm-codex-app-server'
 const packageRoot = dirname(dirname(fileURLToPath(import.meta.url)))
+const packageSpec = `file:${packageRoot}`
 
 function dshHome(): string {
   return process.env.DSH_HOME?.trim() || join(homedir(), '.dsh')
@@ -83,7 +84,7 @@ const [command, ...flags] = process.argv.slice(2)
 if (command === 'install') {
   if (flags.length > 0) usage()
   let ok = true
-  for (const profile of profilesForInstall()) ok = runDsh(profile, 'add', packageRoot) && ok
+  for (const profile of profilesForInstall()) ok = runDsh(profile, 'add', packageSpec) && ok
   if (ok) console.log(`Installed ${PACKAGE} for all current Harness profiles.`)
   else process.exitCode = 1
 } else if (command === 'uninstall') {

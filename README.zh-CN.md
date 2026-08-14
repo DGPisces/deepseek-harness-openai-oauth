@@ -21,7 +21,7 @@ OAuth，也不直接调用未公开的 ChatGPT 后端。
 `headless` 和已经存在的自定义 profile：
 
 ```sh
-npm install --global https://github.com/DGPisces/deepseek-harness-chatgpt/archive/refs/tags/v0.2.0.tar.gz
+npm install --global https://github.com/DGPisces/deepseek-harness-chatgpt/archive/refs/tags/v0.2.1.tar.gz
 dsh-codex install
 ```
 

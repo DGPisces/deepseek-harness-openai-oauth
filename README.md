@@ -18,7 +18,7 @@ Install the package once, then register it with every current Harness profile
 (including `web`, `headless`, and existing custom profiles):
 
 ```sh
-npm install --global https://github.com/DGPisces/deepseek-harness-chatgpt/archive/refs/tags/v0.2.0.tar.gz
+npm install --global https://github.com/DGPisces/deepseek-harness-chatgpt/archive/refs/tags/v0.2.1.tar.gz
 dsh-codex install
 ```
 
