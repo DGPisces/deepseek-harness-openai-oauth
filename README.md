@@ -12,6 +12,19 @@ This project does not use an OpenAI API key, read another Codex installation's `
 
 ## Install
 
+For the Harness web UI:
+
+```sh
+npx @deepseek-ai/dsh plugin --profile web add github:DGPisces/deepseek-harness-chatgpt
+npx @deepseek-ai/dsh web
+```
+
+Open **Settings → OpenAI OAuth → Sign in with ChatGPT**. After authorization,
+the models available to the signed-in account appear in the normal Harness
+model picker.
+
+For a headless profile:
+
 ```sh
 npx @deepseek-ai/dsh plugin --profile headless add github:DGPisces/deepseek-harness-chatgpt
 npx @deepseek-ai/dsh plugin --profile headless exec dsh-codex-login

@@ -18,7 +18,9 @@ export declare class AppServer {
     private threadIdFromTurn;
     private queue;
     request(method: string, params: JsonObject): Promise<JsonObject>;
-    account(): Promise<JsonObject | null>;
+    account(refreshToken?: boolean): Promise<JsonObject | null>;
+    startChatGptLogin(): Promise<JsonObject>;
+    logout(): Promise<void>;
     models(): Promise<JsonObject[]>;
     startThread(input: JsonObject): Promise<string>;
     startTurn(threadId: string, input: JsonObject): Promise<string>;

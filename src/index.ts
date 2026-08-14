@@ -1,4 +1,5 @@
 import type { Context } from '@deepseek-ai/cordis'
+import type {} from '@deepseek-ai/dsh-host-webserver'
 import {
   CallId,
   LlmAdapter,
@@ -14,6 +15,7 @@ import type {
   ToolResultBlock,
 } from '@deepseek-ai/dsh-llm'
 import { AppServer, type ServerEvent } from './app-server.js'
+import { oauthRoute } from './oauth-http.js'
 
 export const name = 'llm-codex-app-server'
 export const inject = ['llm']
@@ -339,6 +341,9 @@ export function apply(ctx: Context): void {
   const server = new AppServer()
   ctx.llm.registerAdapter([PROVIDER], new CodexAppServerAdapter(server))
   ctx.effect(() => () => server.close(), 'llm-codex-app-server.close')
+  ctx.inject(['webServer'], (webCtx) => {
+    webCtx.effect(() => webCtx.webServer.register(oauthRoute(server)), 'llm-codex-app-server.oauth-route')
+  })
 }
 
 export default { name, inject, apply }

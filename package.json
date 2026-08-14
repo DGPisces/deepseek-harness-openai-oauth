@@ -5,6 +5,17 @@
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "types": "./lib/client.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./package.json": "./package.json"
+  },
   "bin": {
     "dsh-codex-login": "lib/login.js"
   },
@@ -21,10 +32,17 @@
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-settings"
+      ],
+      "platform": "web"
     }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && tsdown --config tsdown.client.config.ts",
     "test": "npm run build && node --test tests/*.test.mjs"
   },
   "keywords": [
@@ -38,21 +56,36 @@
     "@openai/codex": "0.146.0"
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": ">=4.0.1-rc.1",
-    "@deepseek-ai/dsh-llm": ">=0.0.1-rc.1"
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-host-webserver": ">=0.1.0-rc.5",
+    "@deepseek-ai/dsh-llm": ">=0.1.0-rc.5",
+    "react": "^18.2.0"
   },
   "peerDependenciesMeta": {
     "@deepseek-ai/cordis": {
       "optional": true
     },
+    "@deepseek-ai/dsh-host-webserver": {
+      "optional": true
+    },
     "@deepseek-ai/dsh-llm": {
+      "optional": true
+    },
+    "react": {
       "optional": true
     }
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "4.0.1",
-    "@deepseek-ai/dsh-llm": "0.0.1-rc.1",
+    "@deepseek-ai/dsh-client-runtime": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-ui-settings": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-ui-slots": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-host-webserver": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-llm": "0.1.0-rc.6",
     "@types/node": "^24.3.0",
+    "@types/react": "^18.3.24",
+    "react": "^18.3.1",
+    "tsdown": "^0.22.2",
     "typescript": "^5.9.2"
   },
   "engines": {

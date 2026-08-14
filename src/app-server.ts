@@ -162,9 +162,21 @@ export class AppServer {
     return new Promise((resolve, reject) => this.pending.set(id, { resolve, reject }))
   }
 
-  async account(): Promise<JsonObject | null> {
-    const result = await this.request('account/read', { refreshToken: true })
+  async account(refreshToken = true): Promise<JsonObject | null> {
+    const result = await this.request('account/read', { refreshToken })
     return result.account as JsonObject | null
+  }
+
+  async startChatGptLogin(): Promise<JsonObject> {
+    return this.request('account/login/start', {
+      type: 'chatgpt',
+      useHostedLoginSuccessPage: true,
+      appBrand: 'chatgpt',
+    })
+  }
+
+  async logout(): Promise<void> {
+    await this.request('account/logout', {})
   }
 
   async models(): Promise<JsonObject[]> {
