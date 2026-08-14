@@ -21,8 +21,14 @@ OAuth，也不直接调用未公开的 ChatGPT 后端。
 `headless` 和已经存在的自定义 profile：
 
 ```sh
-npm install --global github:DGPisces/deepseek-harness-chatgpt
+npm install --global https://github.com/DGPisces/deepseek-harness-chatgpt/archive/refs/tags/v0.2.0.tar.gz
 dsh-codex install
+```
+
+如果 npm 的全局命令目录不在 `PATH` 中，请改用：
+
+```sh
+"$(npm prefix --global)/bin/dsh-codex" install
 ```
 
 以后如果新建了自定义 profile，再运行一次 `dsh-codex install`。
@@ -92,6 +98,8 @@ npm uninstall --global dsh-llm-codex-app-server
 dsh-codex uninstall --purge-auth
 npm uninstall --global dsh-llm-codex-app-server
 ```
+
+两种卸载方式都可以使用 `$(npm prefix --global)/bin/dsh-codex` 作为命令路径。
 
 如果已经先删除了全局命令，可以手动清理标准 profiles：
 

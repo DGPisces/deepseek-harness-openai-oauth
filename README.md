@@ -18,8 +18,14 @@ Install the package once, then register it with every current Harness profile
 (including `web`, `headless`, and existing custom profiles):
 
 ```sh
-npm install --global github:DGPisces/deepseek-harness-chatgpt
+npm install --global https://github.com/DGPisces/deepseek-harness-chatgpt/archive/refs/tags/v0.2.0.tar.gz
 dsh-codex install
+```
+
+If npm's global bin directory is not on `PATH`, run:
+
+```sh
+"$(npm prefix --global)/bin/dsh-codex" install
 ```
 
 Re-run `dsh-codex install` after creating a new custom profile.
@@ -100,6 +106,9 @@ under `~/.deepseek-harness/codex`:
 dsh-codex uninstall --purge-auth
 npm uninstall --global dsh-llm-codex-app-server
 ```
+
+The same `$(npm prefix --global)/bin/dsh-codex` fallback applies to both
+uninstall commands.
 
 If the global command was removed first, remove the profile registrations
 manually:
