@@ -13,8 +13,8 @@ This project does not use an OpenAI API key, read another Codex installation's `
 ## Install
 
 ```sh
-dsh plugin --profile headless add github:DGPisces/deepseek-harness-chatgpt
-dsh plugin --profile headless exec dsh-codex-login
+npx @deepseek-ai/dsh plugin --profile headless add github:DGPisces/deepseek-harness-chatgpt
+npx @deepseek-ai/dsh plugin --profile headless exec dsh-codex-login
 ```
 
 The login is isolated under `~/.deepseek-harness/codex`. Codex owns credential storage and token refresh.
@@ -32,7 +32,7 @@ agent-default-model:
 Then run Harness normally:
 
 ```sh
-dsh --profile headless "inspect this repository"
+npx @deepseek-ai/dsh --profile headless "inspect this repository"
 ```
 
 Model availability comes from the signed-in Codex account and is not hardcoded by this plugin.
