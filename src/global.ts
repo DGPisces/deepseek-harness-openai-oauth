@@ -7,9 +7,11 @@ import { dirname, join, parse, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { codexHome } from './paths.js'
 
-const PACKAGE = 'dsh-llm-codex-app-server'
+const PACKAGE = 'deepseek-harness-openai-oauth'
+const LEGACY_PACKAGES = ['dsh-llm-codex-app-server']
 const packageRoot = dirname(dirname(fileURLToPath(import.meta.url)))
-const packageSpec = `file:${packageRoot}`
+const packageVersion = (JSON.parse(readFileSync(join(packageRoot, 'package.json'), 'utf8')) as { version: string }).version
+const packageSpec = `${PACKAGE}@${packageVersion}`
 
 function dshHome(): string {
   return process.env.DSH_HOME?.trim() || join(homedir(), '.dsh')
@@ -29,9 +31,9 @@ function existingProfiles(): string[] {
     .map(entry => entry.name)
 }
 
-function installed(profile: string): boolean {
+function installed(profile: string, name: string): boolean {
   const dependencies = manifest(profile)?.dependencies
-  return typeof dependencies === 'object' && dependencies !== null && PACKAGE in dependencies
+  return typeof dependencies === 'object' && dependencies !== null && name in dependencies
 }
 
 function runDsh(profile: string, command: 'add' | 'remove', target: string): boolean {
@@ -76,7 +78,7 @@ function purgeAuth(): boolean {
 }
 
 function usage(): never {
-  console.error('Usage: dsh-codex <install|uninstall> [--purge-auth]')
+  console.error('Usage: deepseek-harness-openai-oauth <install|uninstall> [--purge-auth]')
   process.exit(2)
 }
 
@@ -84,14 +86,23 @@ const [command, ...flags] = process.argv.slice(2)
 if (command === 'install') {
   if (flags.length > 0) usage()
   let ok = true
-  for (const profile of profilesForInstall()) ok = runDsh(profile, 'add', packageSpec) && ok
+  for (const profile of profilesForInstall()) {
+    const legacy = LEGACY_PACKAGES.filter(name => installed(profile, name))
+    if (!runDsh(profile, 'add', packageSpec)) {
+      ok = false
+      continue
+    }
+    for (const name of legacy) ok = runDsh(profile, 'remove', name) && ok
+  }
   if (ok) console.log(`Installed ${PACKAGE} for all current Harness profiles.`)
   else process.exitCode = 1
 } else if (command === 'uninstall') {
   if (flags.some(flag => flag !== '--purge-auth') || flags.length > 1) usage()
   let ok = true
-  for (const profile of existingProfiles().filter(installed)) {
-    ok = runDsh(profile, 'remove', PACKAGE) && ok
+  for (const profile of existingProfiles()) {
+    for (const name of [PACKAGE, ...LEGACY_PACKAGES].filter(name => installed(profile, name))) {
+      ok = runDsh(profile, 'remove', name) && ok
+    }
   }
   if (flags.includes('--purge-auth')) ok = purgeAuth() && ok
   if (ok) console.log(`Removed ${PACKAGE} from all current Harness profiles.`)

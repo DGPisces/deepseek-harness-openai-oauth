@@ -1,10 +1,10 @@
-# DeepSeek Harness ChatGPT OAuth provider
+# deepseek-harness-openai-oauth
 
 English | [简体中文](README.zh-CN.md)
 
-Use GPT models available to your ChatGPT account as the main model in DeepSeek Harness. DeepSeek Harness keeps control of its agent loop and tools; the provider uses the official local Codex app-server for ChatGPT login and model inference.
+Use GPT models from your ChatGPT account as the main model in DeepSeek Harness. Harness keeps its own agent loop and runs its own tools. This package connects its LLM interface to the official local Codex app-server, which handles ChatGPT login, credential storage, token refresh, and model access.
 
-This project does not use an OpenAI API key, read another Codex installation's `auth.json`, implement OAuth, or call the unpublished ChatGPT backend directly.
+You do not need an OpenAI API key. The package does not copy another Codex installation's `auth.json`, implement its own OAuth client, or call an unpublished ChatGPT endpoint.
 
 ## Requirements
 
@@ -12,113 +12,72 @@ This project does not use an OpenAI API key, read another Codex installation's `
 - DeepSeek Harness developer preview `0.1.0-rc.6`
 - A ChatGPT account with Codex access
 
-## Global install
+## Install
 
-Install the package once, then register it with every current Harness profile
-(including `web`, `headless`, and existing custom profiles):
-
-```sh
-npm install --global https://github.com/DGPisces/deepseek-harness-chatgpt/archive/refs/tags/v0.2.1.tar.gz
-dsh-codex install
-```
-
-If npm's global bin directory is not on `PATH`, run:
+Run one command:
 
 ```sh
-"$(npm prefix --global)/bin/dsh-codex" install
+npx -y deepseek-harness-openai-oauth install
 ```
 
-Re-run `dsh-codex install` after creating a new custom profile.
+The installer registers the package with the `web` and `headless` profiles, plus any custom profiles that already exist. It also replaces the old `dsh-llm-codex-app-server` package if found.
 
-Start the web UI:
+Run the same command to update the package later. If you create a custom profile after installation, run it once more to register that profile.
+
+## Sign in with ChatGPT
+
+Start the Harness web interface:
 
 ```sh
 npx @deepseek-ai/dsh web
 ```
 
-Open **Settings → OpenAI OAuth → Sign in with ChatGPT**. After authorization,
-the models available to the signed-in account appear in the normal Harness
-model picker.
+Open **Settings > OpenAI OAuth**, select **Sign in with ChatGPT**, and finish authorization in the OpenAI page. The GPT models available to your account will then appear in the normal Harness model picker.
 
-## Profile-only install
-
-For the Harness web UI:
+For a headless profile, sign in from the terminal:
 
 ```sh
-npx @deepseek-ai/dsh plugin --profile web add github:DGPisces/deepseek-harness-chatgpt
-npx @deepseek-ai/dsh web
-```
-
-Open **Settings → OpenAI OAuth → Sign in with ChatGPT**. After authorization,
-the models available to the signed-in account appear in the normal Harness
-model picker.
-
-For a headless profile:
-
-```sh
-npx @deepseek-ai/dsh plugin --profile headless add github:DGPisces/deepseek-harness-chatgpt
 npx @deepseek-ai/dsh plugin --profile headless exec dsh-codex-login
 ```
 
-The login is isolated under `~/.deepseek-harness/codex`. Codex owns credential storage and token refresh.
+The login is stored separately under `~/.deepseek-harness/codex`. Codex owns the credentials and refreshes them when needed.
 
-Select a model advertised by Codex, for example:
+## Select a model
+
+Choose the provider and model in the Harness interface, or set them in `~/.dsh/settings.yaml`:
 
 ```yaml
-# ~/.dsh/settings.yaml
 agent-default-model:
   provider: openai-codex
   model: gpt-5.6-sol
   reasoningEffort: high
 ```
 
-Then run Harness normally:
+Run Harness as usual:
 
 ```sh
 npx @deepseek-ai/dsh --profile headless "inspect this repository"
 ```
 
-Model availability comes from the signed-in Codex account and is not hardcoded by this plugin.
-
-## Why OAuth is next to Models
-
-DeepSeek Harness `0.1.0-rc.6` exposes whole settings sections to plugins, but
-does not expose a child slot inside its built-in Models page. The OAuth section
-is therefore placed immediately after Models. Replacing or copying the Models
-page would be brittle, and the Harness contribution guide currently does not
-accept external pull requests. The plugin can move the same OAuth card into
-Models when Harness publishes a supported child slot.
+The plugin reads the model list from the signed-in Codex account. It does not keep a hardcoded list of GPT versions.
 
 ## Uninstall
 
-Remove the plugin from every current Harness profile while keeping the local
-OAuth login for a later reinstall:
+Remove the package from every current Harness profile while keeping the ChatGPT login for a future reinstall:
 
 ```sh
-dsh-codex uninstall
-npm uninstall --global dsh-llm-codex-app-server
+npx -y deepseek-harness-openai-oauth uninstall
 ```
 
-For a clean uninstall that also logs out and removes the isolated OAuth data
-under `~/.deepseek-harness/codex`:
+For a clean uninstall that also signs out and deletes `~/.deepseek-harness/codex`:
 
 ```sh
-dsh-codex uninstall --purge-auth
-npm uninstall --global dsh-llm-codex-app-server
+npx -y deepseek-harness-openai-oauth uninstall --purge-auth
 ```
 
-The same `$(npm prefix --global)/bin/dsh-codex` fallback applies to both
-uninstall commands.
+These commands also remove registrations left by the old package name. They do not install a permanent global npm package. npm may retain its normal download cache.
 
-If the global command was removed first, remove the profile registrations
-manually:
-
-```sh
-npx @deepseek-ai/dsh plugin --profile web remove dsh-llm-codex-app-server
-npx @deepseek-ai/dsh plugin --profile headless remove dsh-llm-codex-app-server
-```
-
-## Local verification
+## Local development
 
 ```sh
 npm install
@@ -126,16 +85,7 @@ npm test
 npm pack --dry-run
 ```
 
-The real-provider smoke test used GPT-5.6 Sol as the Harness main model, asked it to call Harness's `bash` tool, and received the tool result back in the same Codex turn.
-
-## Status and limitations
-
-- Codex app-server dynamic tools are experimental, so `@openai/codex` is pinned to `0.146.0`.
-- Text, reasoning, model discovery, reasoning effort, and Harness tool calls are supported.
-- Image input and per-turn `stop`, `temperature`, and `maxTokens` are rejected explicitly.
-- Active app-server threads are process-local; restart recovery is not implemented.
-
-This is an independent community plugin and is not endorsed by DeepSeek or OpenAI.
+This is an independent community plugin. It is not endorsed by DeepSeek or OpenAI.
 
 ## License
 

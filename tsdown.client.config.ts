@@ -1,4 +1,4 @@
-const id = 'dsh-llm-codex-app-server'
+const id = 'deepseek-harness-openai-oauth'
 
 export default {
   entry: { client: 'src/client.tsx' },
