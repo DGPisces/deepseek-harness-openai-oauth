@@ -1,0 +1,53 @@
+{
+  "name": "dsh-llm-codex-app-server",
+  "version": "0.1.0",
+  "description": "DeepSeek Harness LLM provider for Codex models using managed ChatGPT OAuth",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "bin": {
+    "dsh-codex-login": "lib/login.js"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DGPisces/deepseek-harness-chatgpt.git"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test tests/*.test.mjs"
+  },
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "codex",
+    "oauth"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@openai/codex": "0.146.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": ">=4.0.1-rc.1",
+    "@deepseek-ai/dsh-llm": ">=0.0.1-rc.1"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "4.0.1",
+    "@deepseek-ai/dsh-llm": "0.0.1-rc.1",
+    "@types/node": "^24.3.0",
+    "typescript": "^5.9.2"
+  },
+  "engines": {
+    "node": ">=22.19.0"
+  }
+}

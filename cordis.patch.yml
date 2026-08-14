@@ -1,0 +1,3 @@
+- insert:
+    - id: llm-codex-app-server
+      name: dsh-llm-codex-app-server
