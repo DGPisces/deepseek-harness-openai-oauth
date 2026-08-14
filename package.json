@@ -1,6 +1,6 @@
 {
-  "name": "deepseek-harness-openai-oauth",
-  "version": "0.3.1",
+  "name": "dsh-openai-oauth",
+  "version": "0.4.0",
   "description": "DeepSeek Harness LLM provider for Codex models using managed ChatGPT OAuth",
   "type": "module",
   "main": "lib/index.js",
@@ -17,7 +17,7 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "deepseek-harness-openai-oauth": "lib/global.js",
+    "dsh-openai-oauth": "lib/global.js",
     "dsh-codex": "lib/global.js",
     "dsh-codex-login": "lib/login.js"
   },
@@ -30,7 +30,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DGPisces/deepseek-harness-openai-oauth.git"
+    "url": "git+https://github.com/DGPisces/dsh-openai-oauth.git"
   },
   "dsh": {
     "bundle": {

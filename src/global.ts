@@ -7,8 +7,8 @@ import { dirname, join, parse, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { codexHome } from './paths.js'
 
-const PACKAGE = 'deepseek-harness-openai-oauth'
-const LEGACY_PACKAGES = ['dsh-llm-codex-app-server']
+const PACKAGE = 'dsh-openai-oauth'
+const LEGACY_PACKAGES = ['deepseek-harness-openai-oauth', 'dsh-llm-codex-app-server']
 const packageRoot = dirname(dirname(fileURLToPath(import.meta.url)))
 const packageVersion = (JSON.parse(readFileSync(join(packageRoot, 'package.json'), 'utf8')) as { version: string }).version
 const packageSpec = `${PACKAGE}@${packageVersion}`
@@ -78,7 +78,7 @@ function purgeAuth(): boolean {
 }
 
 function usage(): never {
-  console.error('Usage: deepseek-harness-openai-oauth <install|uninstall> [--purge-auth]')
+  console.error('Usage: dsh-openai-oauth <install|uninstall> [--purge-auth]')
   process.exit(2)
 }
 

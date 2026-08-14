@@ -1,4 +1,4 @@
-# deepseek-harness-openai-oauth
+# dsh-openai-oauth
 
 English | [简体中文](README.zh-CN.md)
 
@@ -17,10 +17,10 @@ You do not need an OpenAI API key. The package does not copy another Codex insta
 Run one command:
 
 ```sh
-npx -y deepseek-harness-openai-oauth install
+npx -y dsh-openai-oauth install
 ```
 
-The installer registers the package with the `web` and `headless` profiles, plus any custom profiles that already exist. It also replaces the old `dsh-llm-codex-app-server` package if found.
+The installer registers the package with the `web` and `headless` profiles, plus any custom profiles that already exist. It also replaces the old `deepseek-harness-openai-oauth` and `dsh-llm-codex-app-server` packages if found.
 
 Run the same command to update the package later. If you create a custom profile after installation, run it once more to register that profile.
 
@@ -66,13 +66,13 @@ The plugin reads the model list from the signed-in Codex account. It does not ke
 Remove the package from every current Harness profile while keeping the ChatGPT login for a future reinstall:
 
 ```sh
-npx -y deepseek-harness-openai-oauth uninstall
+npx -y dsh-openai-oauth uninstall
 ```
 
 For a clean uninstall that also signs out and deletes `~/.deepseek-harness/codex`:
 
 ```sh
-npx -y deepseek-harness-openai-oauth uninstall --purge-auth
+npx -y dsh-openai-oauth uninstall --purge-auth
 ```
 
 These commands also remove registrations left by the old package name. They do not install a permanent global npm package. npm may retain its normal download cache.
